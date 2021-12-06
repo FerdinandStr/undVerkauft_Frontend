@@ -1,0 +1,17 @@
+.centerLogin {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.LoginCard {
+    text-align: center;
+}
+.LoginCard > div {
+    margin: 15px;
+}
+
+.RegisterSliderDiv {
+    display: flex;
+    justify-content: center;
+}

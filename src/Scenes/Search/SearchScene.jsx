@@ -1,21 +1,11 @@
 import React from "react"
+import ItemCard from "./ItemCard/ItemCard.jsx"
+import styles from "./SearchScene.module.css"
 
 function SearchScene(params) {
     const { items } = params
 
-    console.log(items)
-
-    return (
-        <div>
-            {items
-                ? items.map((item) => (
-                      <div id={item.id}>
-                          <h1>{item.name}</h1>
-                      </div>
-                  ))
-                : null}
-        </div>
-    )
+    return <div className={styles.ItemCardsContainer}>{items ? items.map((item) => <ItemCard item={item} />) : null}</div>
 }
 
 export default SearchScene
