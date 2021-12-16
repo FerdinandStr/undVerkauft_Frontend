@@ -4,27 +4,21 @@ import { Route, Routes, useNavigate } from "react-router"
 import MainPage from "./MainPage"
 import useLoginStatus from "./hooks/useLoginStatus"
 import LoginScene from "./Scenes/Login/LoginScene"
+import DateAdapter from "@mui/lab/AdapterDateFns"
+import { LocalizationProvider } from "@mui/lab"
 
 function App() {
-    const navigate = useNavigate()
     const useLogin = useLoginStatus()
-    const [isLoggedIn] = useLogin
-
-    console.log(isLoggedIn)
-
-    useEffect(() => {
-        if (!isLoggedIn) {
-            navigate("../login", { replace: true })
-        }
-    }, [isLoggedIn])
 
     return (
         // <MainPage />
         <div stlye="width=100%">
-            <Routes>
-                <Route path="/login" element={<LoginScene useLogin={useLogin} />} />
-                <Route path="/*" element={<MainPage />} />
-            </Routes>
+            <LocalizationProvider dateAdapter={DateAdapter}>
+                <Routes>
+                    <Route path="/login" element={<LoginScene useLogin={useLogin} />} />
+                    <Route path="/*" element={<MainPage />} />
+                </Routes>
+            </LocalizationProvider>
         </div>
     )
 }

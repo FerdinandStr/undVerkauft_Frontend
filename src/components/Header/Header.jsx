@@ -1,17 +1,16 @@
-import { TextField } from "@mui/material"
-import React, { useEffect, useState } from "react"
-import getItems from "../../api/getItems"
-import { getReq } from "../../helpers/rest"
+import { Button, TextField } from "@mui/material"
+import React from "react"
+import { Link } from "react-router-dom"
 import styles from "./style.module.css"
 
 function Header(params) {
-    const { setSearchInput } = params
-    // const [searchInput, setSearchInput] = useState()
+    const { setSearchInput, setSideMenuOpen } = params
 
-    // useEffect
+    const userName = localStorage.getItem("username")
 
     return (
         <div className={styles.HeaderDiv}>
+            <Button onClick={() => setSideMenuOpen(true)}>{"left"}</Button>
             <div>Logo</div>
             <div>
                 <TextField
@@ -22,7 +21,13 @@ function Header(params) {
                     onChange={(e) => setSearchInput(event.target.value)}
                 />
             </div>
-            <div>Login</div>
+            {userName ? (
+                <p>{userName}</p>
+            ) : (
+                <Link to="/login">
+                    <div>Login</div>
+                </Link>
+            )}
         </div>
     )
 }

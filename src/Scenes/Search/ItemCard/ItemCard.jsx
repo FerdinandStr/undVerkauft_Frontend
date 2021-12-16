@@ -4,7 +4,8 @@ export default function ItemCard(props) {
     const { item } = props
 
     const lastBid = item.offer ? item.offer.bidList[item.offer.bidList.length - 1] : null
-    const lastPrice = lastBid ? lastBid.bid : null
+
+    const lastPrice = lastBid ? lastBid.bid : null || item.offer.askPrice
     return (
         <div id={item.id} className={style.ItemCard}>
             <img />

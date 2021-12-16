@@ -1,21 +1,22 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { print } from "../helpers/fastLog"
+import { useNavigate } from "react-router"
 import { getReq, postReq } from "../helpers/rest"
 
-function useLoginStatus(userId) {
-    const [isLoggedIn, setLoggedIn] = useState(true)
+function useLoginStatus(username) {
+    const navigate = useNavigate()
+    const [isLoggedIn, setLoggedIn] = useState(username)
 
     function checkLogin() {
         postReq("/users/checkLogin")
             .then((res) => {
                 localStorage.setItem("username", res.data.username)
-                // localStorage.setItem("user_id", res.data.user_id)
-                setLoggedIn(true)
+                setLoggedIn(res.data.username)
             })
             .catch((e) => {
                 console.log("ERROR", e)
-                setLoggedIn(false)
+                setLoggedIn(null)
+                navigate("../login", { replace: true })
             })
     }
 

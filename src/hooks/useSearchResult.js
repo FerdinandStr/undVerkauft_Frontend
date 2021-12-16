@@ -6,7 +6,7 @@ export default function useSearchResult(init) {
     const [items, setItems] = useState()
 
     useEffect(() => {
-        getItems({ name: searchInput })
+        getItems({ name: searchInput, activeOffer: true })
             .then((res) => {
                 console.log("RES", res)
                 setItems(res.data)

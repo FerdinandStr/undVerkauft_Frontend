@@ -22,33 +22,43 @@ function LoginScene(props) {
 
     function tryLogin() {
         userLogin(login, password)
-            .then(() => {
-                console.log("LOGED IN")
-                setIsLoggedIn(true)
+            .then((res) => {
+                setIsLoggedIn(res.data.username)
                 navigate("/")
             })
             .catch((e) => {
-                console.log("Login failed", e.response)
-                setError(e.response.data)
+                // console.log("Login failed", e.response)
+                if (e.response && e.response.data) {
+                    setError(e.response.data)
+                } else {
+                    setError("HARD ERROR")
+                }
             })
     }
 
     function tryRegister() {
         userRegister(username, email, password, passwordConfirm)
-            .then(() => {
+            .then((res) => {
                 console.log("REGISTERED")
-                setIsLoggedIn(true)
+                setIsLoggedIn(res.data.username)
                 navigate("/")
             })
             .catch((e) => {
-                console.log("Register failed", e.response)
+                // console.log("Register failed", e.response)
                 //TODO WHWHHHHYYYHYHYHYHYHYHHYHYHWHWHYHWEHAHWHHYHWE think of a clean solution maybe later on the endpoint :)
                 if (e.response.data.messages) {
-                    setError(e.response.data.messages[0])
-                } else {
-                    setError(e.response.data)
+                    return setError(e.response.data.messages[0])
+                } else if (e.response.data) {
+                    return setError(e.response.data)
                 }
+                return setError("HARD ERROR")
             })
+    }
+
+    function handleEnterPressLogin(e) {
+        if (e.key === "Enter") {
+            tryLogin()
+        }
     }
 
     const loginComponents = (
@@ -60,6 +70,7 @@ function LoginScene(props) {
                     variant="outlined"
                     value={login}
                     onChange={(e) => updateUser({ login: e.target.value })}
+                    onKeyPress={handleEnterPressLogin}
                 />
             </div>
             <div>
@@ -70,6 +81,7 @@ function LoginScene(props) {
                     type="password"
                     value={password}
                     onChange={(e) => updateUser({ password: e.target.value })}
+                    onKeyPress={handleEnterPressLogin}
                 />
             </div>
             <Button variant="contained" onClick={tryLogin}>
