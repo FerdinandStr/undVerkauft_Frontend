@@ -1,0 +1,32 @@
+.ImageSliderContainer {
+    /* display: flex; */
+    display: inline-flex;
+    /* justify-content: center; */
+    align-items: center;
+    height: 300px;
+    position: relative;
+}
+.LeftButton {
+    position: absolute;
+    left: 10px;
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: none !important;
+}
+
+.RightButton {
+    position: absolute;
+    right: 10px;
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: none !important;
+}
+.RightButton:hover,
+.LeftButton:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.Image {
+    max-width: 300px;
+    max-height: 300px;
+}

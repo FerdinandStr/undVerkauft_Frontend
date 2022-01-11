@@ -1,0 +1,4 @@
+.ItemCardsContainer {
+    display: grid;
+    grid-template: auto / repeat(6, 1fr);
+}

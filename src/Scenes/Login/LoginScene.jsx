@@ -1,8 +1,7 @@
 import { Alert, Button, FormControlLabel, FormGroup, Switch, TextField } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import userLogin from "../../api/userLogin"
-import userRegister from "../../api/userRegister"
+import { userLogin, userRegister } from "../../api/authRoutes"
 import styles from "./LoginScene.module.css"
 
 function LoginScene(props) {
@@ -22,36 +21,33 @@ function LoginScene(props) {
 
     function tryLogin() {
         userLogin(login, password)
-            .then((res) => {
-                setIsLoggedIn(res.data.username)
-                navigate("/")
+            .then((data) => {
+                setIsLoggedIn(data.username)
+                navigate("/items")
             })
             .catch((e) => {
                 // console.log("Login failed", e.response)
-                if (e.response && e.response.data) {
-                    setError(e.response.data)
+                if (e.messages) {
+                    setError(e.messages[0])
                 } else {
-                    setError("HARD ERROR")
+                    setError(e.error)
                 }
             })
     }
 
     function tryRegister() {
         userRegister(username, email, password, passwordConfirm)
-            .then((res) => {
+            .then((data) => {
                 console.log("REGISTERED")
-                setIsLoggedIn(res.data.username)
-                navigate("/")
+                setIsLoggedIn(data.username)
+                navigate("/items")
             })
             .catch((e) => {
-                // console.log("Register failed", e.response)
-                //TODO WHWHHHHYYYHYHYHYHYHYHHYHYHWHWHYHWEHAHWHHYHWE think of a clean solution maybe later on the endpoint :)
-                if (e.response.data.messages) {
-                    return setError(e.response.data.messages[0])
-                } else if (e.response.data) {
-                    return setError(e.response.data)
+                if (e.messages) {
+                    setError(e.messages[0])
+                } else {
+                    setError(e.error)
                 }
-                return setError("HARD ERROR")
             })
     }
 

@@ -1,10 +1,10 @@
 import styles from "./NewItemScene.module.css"
 import { DateTimePicker } from "@mui/lab"
-import { Alert, Button, FilledInput, FormControl, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material"
-import { textAlign } from "@mui/system"
+import { Alert, Button, InputAdornment, TextField } from "@mui/material"
 import { useState } from "react"
-import postItem from "../../api/postItem"
 import { useNavigate } from "react-router"
+import { postItemImg } from "../../api/fileRoutes"
+import { postItem } from "../../api/itemRoutes"
 
 const initialItem = {
     name: "",
@@ -21,51 +21,60 @@ const initialItem = {
 export default function NewItemScene() {
     const navigate = useNavigate()
     const [newItem, setNewItem] = useState(initialItem)
+    const [files, setFiles] = useState([])
     const [errorMsg, setErrorMsg] = useState()
 
-    function handleChange(obj) {
+    function handleItemChange(obj) {
         setNewItem((prevItem) => ({ ...prevItem, ...obj }))
     }
 
-    console.log("NEW ITEM", newItem)
+    function showErrorMessage(e) {
+        console.log("ERROR", e)
+        if (e.messages) {
+            return e.messages[0]
+        } else if (e.error) {
+            return e.error
+        } else {
+            console.log(e)
+        }
+    }
 
-    function createNewItem(item) {
-        setErrorMsg()
-        console.log("RUN FOR ITEM", item)
+    function save() {
+        postItem(newItem)
+            .then((dbItem) => {
+                console.log("What?", dbItem)
 
-        postItem(item)
-            .then((res) => {
-                console.log("DONE", res)
-
-                //TODO antwort mit artikelid hohlen und dann router auf neue ID schicken => direkt öffnen des elements
-                navigate("/")
+                postItemImg(dbItem._id, files)
+                    .then((res) => {
+                        console.log("RESSSUSUSUSUUSUS", res)
+                        console.log(1)
+                        console.log()
+                        console.log("navigage?", "/items/" + dbItem._id)
+                        console.log(2)
+                        navigate("/items/" + dbItem._id)
+                    })
+                    .catch(showErrorMessage)
             })
-            .catch((e) => {
-                if (e.messages) {
-                    setErrorMsg(e.messages[0])
-                } else {
-                    setErrorMsg(e.error)
-                }
-            })
+            .catch(showErrorMessage)
     }
 
     return (
         <div>
             <h1>Create new Item</h1>
-            <TextField id="outlined-basic" label="Artikelname" variant="outlined" onChange={(e) => handleChange({ name: e.target.value })} />
+            <TextField id="outlined-basic" label="Artikelname" variant="outlined" onChange={(e) => handleItemChange({ name: e.target.value })} />
             <TextField
                 id="outlined-basic"
                 label="Beschreibung"
                 multiline
                 variant="outlined"
-                onChange={(e) => handleChange({ description: e.target.value })}
+                onChange={(e) => handleItemChange({ description: e.target.value })}
             />
             <h2>Angebot</h2>
             <TextField
                 id="outlined-adornment-amount"
                 label="Startpreis"
                 value={newItem.offer.askPrice}
-                onChange={(e) => handleChange({ offer: { ...newItem.offer, askPrice: e.target.value } })}
+                onChange={(e) => handleItemChange({ offer: { ...newItem.offer, askPrice: e.target.value } })}
                 InputProps={{
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                     className: styles.InputAskPrice,
@@ -74,21 +83,23 @@ export default function NewItemScene() {
             <DateTimePicker
                 label="Start Datum"
                 value={newItem.offer.startDate}
-                onChange={(date) => handleChange({ offer: { ...newItem.offer, startDate: date } })}
+                onChange={(date) => handleItemChange({ offer: { ...newItem.offer, startDate: date } })}
                 renderInput={(params) => <TextField {...params} />}
             />
             <DateTimePicker
                 label="End Datum"
                 value={newItem.offer.endDate}
-                onChange={(date) => handleChange({ offer: { ...newItem.offer, endDate: date } })}
+                onChange={(date) => handleItemChange({ offer: { ...newItem.offer, endDate: date } })}
                 renderInput={(params) => <TextField {...params} />}
             />
 
+            <input type="file" name="Bild hochladen" multiple onChange={(e) => setFiles(e.target.files)} />
+
             {errorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
 
-            <Button variant="contained" onClick={() => createNewItem(newItem)}>
+            <button className={styles.CreateItemButton + " DefaultButton"} onClick={save}>
                 Artikel erstellen
-            </Button>
+            </button>
         </div>
     )
 }

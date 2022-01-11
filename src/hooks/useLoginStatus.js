@@ -1,21 +1,19 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import { getReq, postReq } from "../helpers/rest"
+import { postReq } from "../helpers/rest"
 
-function useLoginStatus(username) {
+function useLoginStatus(username, userId) {
     const navigate = useNavigate()
-    const [isLoggedIn, setLoggedIn] = useState(username)
+    const [loginUser, setLoginUser] = useState({ username, userId })
 
     function checkLogin() {
         postReq("/users/checkLogin")
-            .then((res) => {
-                localStorage.setItem("username", res.data.username)
-                setLoggedIn(res.data.username)
+            .then((data) => {
+                setLoginUser({ username: data.username, userId: data._id })
             })
             .catch((e) => {
                 console.log("ERROR", e)
-                setLoggedIn(null)
+                setLoginUser(null)
                 navigate("../login", { replace: true })
             })
     }
@@ -24,7 +22,7 @@ function useLoginStatus(username) {
         checkLogin()
     }, [])
 
-    return [isLoggedIn, checkLogin]
+    return [loginUser, checkLogin]
 }
 
 export default useLoginStatus

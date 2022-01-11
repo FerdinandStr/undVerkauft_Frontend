@@ -16,7 +16,7 @@ function App() {
             <LocalizationProvider dateAdapter={DateAdapter}>
                 <Routes>
                     <Route path="/login" element={<LoginScene useLogin={useLogin} />} />
-                    <Route path="/*" element={<MainPage />} />
+                    <Route path="/*" element={<MainPage useLogin={useLogin} />} />
                 </Routes>
             </LocalizationProvider>
         </div>

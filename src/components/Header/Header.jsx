@@ -1,12 +1,22 @@
 import { Button, TextField } from "@mui/material"
 import React from "react"
 import { Link } from "react-router-dom"
+import { userLogout } from "../../api/authRoutes"
 import styles from "./style.module.css"
+import { useNavigate } from "react-router"
 
-function Header(params) {
-    const { setSearchInput, setSideMenuOpen } = params
+function Header(props) {
+    const { useLogin, setSearchInput, setSideMenuOpen } = props
+    const navigate = useNavigate()
 
-    const userName = localStorage.getItem("username")
+    const [loginUser, checkLogin] = useLogin
+
+    function logout() {
+        userLogout().finally(() => {
+            checkLogin()
+        })
+        navigate("/login")
+    }
 
     return (
         <div className={styles.HeaderDiv}>
@@ -21,8 +31,11 @@ function Header(params) {
                     onChange={(e) => setSearchInput(event.target.value)}
                 />
             </div>
-            {userName ? (
-                <p>{userName}</p>
+            {loginUser ? (
+                <div>
+                    <p>{loginUser.username}</p>
+                    <Button onClick={logout}>Logout</Button>
+                </div>
             ) : (
                 <Link to="/login">
                     <div>Login</div>

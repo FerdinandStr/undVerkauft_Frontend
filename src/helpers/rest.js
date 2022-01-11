@@ -1,6 +1,6 @@
 import axios from "axios"
-
-axios.defaults.baseURL = "http://localhost:3000"
+const BASE_URL = "http://localhost:3000"
+axios.defaults.baseURL = BASE_URL
 axios.defaults.withCredentials = true
 
 function getReq(url, data, opt) {
@@ -8,7 +8,7 @@ function getReq(url, data, opt) {
     return new Promise((resolve, reject) => {
         axios(config)
             .then((res) => {
-                return resolve(res)
+                resolve(res.data)
             })
             .catch((e) => handleError(e, reject))
     })
@@ -16,11 +16,10 @@ function getReq(url, data, opt) {
 
 function postReq(url, data, opt) {
     const config = { method: "post", url, data, ...opt }
-    console.log("Config?", config)
     return new Promise((resolve, reject) => {
         axios(config)
             .then((res) => {
-                return resolve(res)
+                resolve(res.data)
             })
             .catch((e) => handleError(e, reject))
     })
@@ -42,4 +41,4 @@ function handleError(e, reject) {
 
 function patchReq() {}
 
-export { getReq, postReq, patchReq }
+export { getReq, postReq, patchReq, BASE_URL }
