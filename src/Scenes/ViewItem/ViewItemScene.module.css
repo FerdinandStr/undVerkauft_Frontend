@@ -1,0 +1,7 @@
+button.DeleteButton {
+    background-color: rgb(175, 0, 0);
+}
+
+button.DeleteButton:hover {
+    background-color: rgb(160, 0, 0);
+}

@@ -17,7 +17,7 @@ function MainPage(props) {
     const { useLogin } = props
 
     //SearchInputState for Header Searchbar and ItemSearchView//
-    const { searchInput, setSearchInput } = useState()
+    const [searchInput, setSearchInput] = useState()
 
     //SideMenu State//
     const sideMenuState = useSideMenuState()
@@ -38,6 +38,8 @@ function MainPage(props) {
         setSnackbarState({ ...snackbarState, Alert: makeAlert(handleSnackbarClose), open: true })
     }
 
+    console.log("WHART", setSearchInput)
+
     return (
         <div>
             <Header useLogin={useLogin} setSearchInput={setSearchInput} setSideMenuOpen={setSideMenuOpen} />
@@ -45,9 +47,10 @@ function MainPage(props) {
 
             <AlertContext.Provider value={sendAlert}>
                 <Routes>
-                    <Route index element={<div>INDEX</div>} />
+                    {/* <Route index element={<div>INDEX</div>} /> */}
                     <Route path="/items" element={<ItemOverview searchInput={searchInput} />} />
                     <Route path="/items/new" element={<NewItemScene />} />
+                    <Route path="/items/update/:itemId" element={<NewItemScene />} />
                     <Route path="/items/:itemId" element={<ViewItemScene useLogin={useLogin} />} />
                 </Routes>
             </AlertContext.Provider>

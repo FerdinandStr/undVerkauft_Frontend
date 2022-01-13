@@ -1,4 +1,7 @@
 .ItemCardsContainer {
+    margin: 25px;
     display: grid;
-    grid-template: auto / repeat(6, 1fr);
+    grid-template: auto / repeat(auto-fill, 322px);
+    justify-content: center;
+    gap: 25px;
 }

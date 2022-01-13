@@ -1,10 +1,12 @@
 import { Alert } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router"
+import { Link } from "react-router-dom"
 import { deleteItemById, getItemById } from "../../api/itemRoutes"
 import ImageSlider from "../../components/ImageSlider/ImageSlider"
 import { BASE_URL } from "../../helpers/rest"
 import { AlertContext } from "../../MainPage"
+import styles from "./ViewItemScene.module.css"
 
 export default function ViewItemScene(props) {
     const navigate = useNavigate()
@@ -62,9 +64,14 @@ export default function ViewItemScene(props) {
             <ImageSlider imgUrlArray={imageUrlArray} />
 
             {isUserItemCreator ? (
-                <button className="DefaultButton" onClick={deleteItem}>
-                    Delete
-                </button>
+                <div>
+                    <Link to={"/items/update/" + itemId}>
+                        <button className={" DefaultButton"}>Modify</button>
+                    </Link>
+                    <button className={styles.DeleteButton + " DefaultButton"} onClick={deleteItem}>
+                        Delete
+                    </button>
+                </div>
             ) : null}
         </div>
     ) : (

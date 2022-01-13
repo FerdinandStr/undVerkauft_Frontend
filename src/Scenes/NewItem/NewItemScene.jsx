@@ -1,10 +1,11 @@
 import styles from "./NewItemScene.module.css"
 import { DateTimePicker } from "@mui/lab"
 import { Alert, Button, InputAdornment, TextField } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { postItemImg } from "../../api/fileRoutes"
-import { postItem } from "../../api/itemRoutes"
+import { getItemById, postItem, updateItem } from "../../api/itemRoutes"
+import { useParams } from "react-router-dom"
 
 const initialItem = {
     name: "",
@@ -18,78 +19,108 @@ const initialItem = {
     },
 }
 
-export default function NewItemScene() {
-    const navigate = useNavigate()
-    const [newItem, setNewItem] = useState(initialItem)
-    const [files, setFiles] = useState([])
-    const [errorMsg, setErrorMsg] = useState()
+function showErrorMessage(e) {
+    console.log("ERROR", e)
+    if (e.messages) {
+        return e.messages[0]
+    } else if (e.error) {
+        return e.error
+    } else {
+        console.log(e)
+    }
+}
 
+export default function NewItemScene() {
+    const { itemId } = useParams()
+    const updateMode = !!itemId
+    const navigate = useNavigate()
+    const [files, setFiles] = useState([])
+    const [errorMsg, setErrorMsg] = useState() //TODO?
+
+    const [item, setItem] = useState(initialItem)
     function handleItemChange(obj) {
-        setNewItem((prevItem) => ({ ...prevItem, ...obj }))
+        setItem((prevItem) => ({ ...prevItem, ...obj }))
     }
 
-    function showErrorMessage(e) {
-        console.log("ERROR", e)
-        if (e.messages) {
-            return e.messages[0]
-        } else if (e.error) {
-            return e.error
-        } else {
-            console.log(e)
+    useEffect(() => {
+        if (itemId) {
+            getItemById(itemId)
+                .then((item) => {
+                    console.log(item)
+                    setItem(item)
+                })
+                .catch((e) => {
+                    console.log("Failed loading Item to Update!", e)
+                    setErrorMsg("Failed loading Item to Update!")
+                })
+        }
+    }, [itemId])
+
+    async function save() {
+        try {
+            const dbItem = await postItem(item)
+            if (files.length > 0) {
+                await postItemImg(dbItem._id, files)
+            }
+            navigate("/items/" + dbItem._id)
+        } catch (e) {
+            showErrorMessage(e)
         }
     }
 
-    function save() {
-        postItem(newItem)
-            .then((dbItem) => {
-                console.log("What?", dbItem)
-
-                postItemImg(dbItem._id, files)
-                    .then((res) => {
-                        console.log("RESSSUSUSUSUUSUS", res)
-                        console.log(1)
-                        console.log()
-                        console.log("navigage?", "/items/" + dbItem._id)
-                        console.log(2)
-                        navigate("/items/" + dbItem._id)
-                    })
-                    .catch(showErrorMessage)
-            })
-            .catch(showErrorMessage)
+    async function update() {
+        try {
+            await updateItem(itemId, item)
+            if (files.length > 0) {
+                await postItemImg(itemId, files)
+            }
+            navigate("/items/" + itemId)
+        } catch (e) {
+            showErrorMessage(e)
+        }
     }
 
     return (
         <div>
             <h1>Create new Item</h1>
-            <TextField id="outlined-basic" label="Artikelname" variant="outlined" onChange={(e) => handleItemChange({ name: e.target.value })} />
+            <TextField
+                id="outlined-basic"
+                label="Artikelname"
+                variant="outlined"
+                value={item.name}
+                onChange={(e) => handleItemChange({ name: e.target.value })}
+            />
             <TextField
                 id="outlined-basic"
                 label="Beschreibung"
                 multiline
                 variant="outlined"
+                value={item.description}
                 onChange={(e) => handleItemChange({ description: e.target.value })}
             />
             <h2>Angebot</h2>
             <TextField
                 id="outlined-adornment-amount"
                 label="Startpreis"
-                value={newItem.offer.askPrice}
-                onChange={(e) => handleItemChange({ offer: { ...newItem.offer, askPrice: e.target.value } })}
+                value={item.offer.askPrice}
+                onChange={(e) => handleItemChange({ offer: { ...item.offer, askPrice: e.target.value } })}
                 InputProps={{
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                     className: styles.InputAskPrice,
                 }}
             />
             <DateTimePicker
+                type="date"
                 label="Start Datum"
-                value={newItem.offer.startDate}
-                onChange={(date) => handleItemChange({ offer: { ...newItem.offer, startDate: date } })}
+                value={item.offer.startDate}
+                onChange={(date) => handleItemChange({ offer: { ...item.offer, startDate: date } })}
                 renderInput={(params) => <TextField {...params} />}
             />
             <DateTimePicker
+                type="date"
                 label="End Datum"
-                value={newItem.offer.endDate}
-                onChange={(date) => handleItemChange({ offer: { ...newItem.offer, endDate: date } })}
+                value={item.offer.endDate}
+                onChange={(date) => handleItemChange({ offer: { ...item.offer, endDate: date } })}
                 renderInput={(params) => <TextField {...params} />}
             />
 
@@ -97,9 +128,15 @@ export default function NewItemScene() {
 
             {errorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
 
-            <button className={styles.CreateItemButton + " DefaultButton"} onClick={save}>
-                Artikel erstellen
-            </button>
+            {updateMode ? (
+                <button className={styles.CreateItemButton + " DefaultButton"} onClick={update}>
+                    Artikel aktuallisieren
+                </button>
+            ) : (
+                <button className={styles.CreateItemButton + " DefaultButton"} onClick={save}>
+                    Artikel erstellen
+                </button>
+            )}
         </div>
     )
 }

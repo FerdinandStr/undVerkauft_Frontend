@@ -21,14 +21,16 @@ function Header(props) {
     return (
         <div className={styles.HeaderDiv}>
             <Button onClick={() => setSideMenuOpen(true)}>{"left"}</Button>
-            <div>Logo</div>
+            <Link to="/items">
+                <div>Logo</div>
+            </Link>
             <div>
                 <TextField
                     id="outlined-basic"
                     label="Outlined"
                     variant="outlined"
                     // value={searchInput}
-                    onChange={(e) => setSearchInput(event.target.value)}
+                    onChange={(e) => setSearchInput(e.target.value)}
                 />
             </div>
             {loginUser ? (
