@@ -7,18 +7,6 @@ import { postItemImg } from "../../api/fileRoutes"
 import { getItemById, postItem, updateItem } from "../../api/itemRoutes"
 import { useParams } from "react-router-dom"
 
-const initialItem = {
-    name: "",
-    description: "",
-    picList: [],
-    detailList: {},
-    offer: {
-        askPrice: 1,
-        startDate: new Date(),
-        endDate: new Date(),
-    },
-}
-
 function showErrorMessage(e) {
     console.log("ERROR", e)
     if (e.messages) {
@@ -37,6 +25,17 @@ export default function NewItemScene() {
     const [files, setFiles] = useState([])
     const [errorMsg, setErrorMsg] = useState() //TODO?
 
+    const initialItem = {
+        name: "",
+        description: "",
+        picList: [],
+        detailList: {},
+        offer: {
+            askPrice: 1,
+            startDate: new Date(),
+            endDate: new Date(),
+        },
+    }
     const [item, setItem] = useState(initialItem)
     function handleItemChange(obj) {
         setItem((prevItem) => ({ ...prevItem, ...obj }))

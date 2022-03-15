@@ -1,14 +1,15 @@
 import { Alert, Snackbar } from "@mui/material"
 import React, { useState } from "react"
 import { Navigate, Route, Routes, useNavigate } from "react-router"
+import { useFilterState } from "./components/FilterMenuBar"
 import Footer from "./components/Footer"
 import Header from "./components/Header/Header"
 import { SideMenu, useSideMenuState } from "./components/SideMenu/SideMenu"
-import useSearchResult from "./hooks/useSearchResult"
 import NewItemScene from "./Scenes/NewItem/NewItemScene"
+import MainSearchContainer from "./Scenes/SearchItem"
 // import useLoginStatus from "./hooks/useLoginStatus"
 // import LoginScene from "./Scenes/LoginScene"
-import ItemOverview from "./Scenes/Search/ItemSearchScene"
+import ItemOverview from "./Scenes/SearchItem/ItemSearchScene"
 import ViewItemScene from "./Scenes/ViewItem/ViewItemScene"
 
 export const AlertContext = React.createContext()
@@ -16,8 +17,9 @@ export const AlertContext = React.createContext()
 function MainPage(props) {
     const { useLogin } = props
 
-    //SearchInputState for Header Searchbar and ItemSearchView//
+    //SearchInputState FilterState for Header Searchbar and MainSearchContainer//
     const [searchInput, setSearchInput] = useState()
+    const { filterState, addSearchFilter } = useFilterState()
 
     //SideMenu State//
     const sideMenuState = useSideMenuState()
@@ -38,17 +40,14 @@ function MainPage(props) {
         setSnackbarState({ ...snackbarState, Alert: makeAlert(handleSnackbarClose), open: true })
     }
 
-    console.log("WHART", setSearchInput)
-
     return (
         <div>
-            <Header useLogin={useLogin} setSearchInput={setSearchInput} setSideMenuOpen={setSideMenuOpen} />
+            <Header useLogin={useLogin} setSearchInput={setSearchInput} setSideMenuOpen={setSideMenuOpen} addSearchFilter={addSearchFilter} />
             <SideMenu state={sideMenuState} />
 
             <AlertContext.Provider value={sendAlert}>
                 <Routes>
-                    {/* <Route index element={<div>INDEX</div>} /> */}
-                    <Route path="/items" element={<ItemOverview searchInput={searchInput} />} />
+                    <Route path="/items" element={<MainSearchContainer searchInput={searchInput} filterState={filterState} />} />
                     <Route path="/items/new" element={<NewItemScene />} />
                     <Route path="/items/update/:itemId" element={<NewItemScene />} />
                     <Route path="/items/:itemId" element={<ViewItemScene useLogin={useLogin} />} />

@@ -1,6 +1,6 @@
 import { getReq, postReq } from "../helpers/rest"
 
-function getItems(queryParams) {
+function getItemsByQuery(queryParams) {
     return getReq("/items", null, { params: queryParams })
 }
 
@@ -19,4 +19,4 @@ function updateItem(itemId, data) {
 function deleteItemById(itemId) {
     return postReq("/items/" + itemId, null, { method: "delete" })
 }
-export { getItems, getItemById, postItem, updateItem, deleteItemById }
+export { getItemsByQuery, getItemById, postItem, updateItem, deleteItemById }

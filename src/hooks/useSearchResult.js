@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getItems } from "../api/itemRoutes"
 
+//TODO delete
 export default function useSearchResult(init) {
     const [searchInput, setSearchInput] = useState(init)
     const [items, setItems] = useState([])

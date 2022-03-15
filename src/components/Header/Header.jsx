@@ -1,12 +1,12 @@
 import { Button, TextField } from "@mui/material"
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { userLogout } from "../../api/authRoutes"
 import styles from "./style.module.css"
 import { useNavigate } from "react-router"
 
 function Header(props) {
-    const { useLogin, setSearchInput, setSideMenuOpen } = props
+    const { useLogin, setSearchInput, setSideMenuOpen, addSearchFilter } = props
     const navigate = useNavigate()
 
     const [loginUser, checkLogin] = useLogin
@@ -16,6 +16,12 @@ function Header(props) {
             checkLogin()
         })
         navigate("/login")
+    }
+
+    const [search, setSearch] = useState("")
+    function updateSearch() {
+        addSearchFilter(search)
+        setSearchInput(search)
     }
 
     return (
@@ -29,9 +35,15 @@ function Header(props) {
                     id="outlined-basic"
                     label="Outlined"
                     variant="outlined"
-                    // value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            updateSearch()
+                        }
+                    }}
                 />
+                <button onClick={updateSearch}>Search</button>
             </div>
             {loginUser ? (
                 <div>
