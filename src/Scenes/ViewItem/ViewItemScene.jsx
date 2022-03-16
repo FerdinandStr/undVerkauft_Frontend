@@ -1,20 +1,25 @@
-import { Alert } from "@mui/material"
+import { Alert, Button, Input, InputAdornment, TextField } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router"
 import { Link } from "react-router-dom"
 import { deleteItemById, getItemById } from "../../api/itemRoutes"
+import { postNewBid } from "../../api/offerRoutes"
 import ImageSlider from "../../components/ImageSlider/ImageSlider"
+import { AlertContext } from "../../helpers/AlertContext"
 import { BASE_URL } from "../../helpers/rest"
-import { AlertContext } from "../../MainPage"
+import useForceUpdate from "../../hooks/useForceUpdate"
+// import { AlertContext } from "../../MainPage"
 import styles from "./ViewItemScene.module.css"
 
 export default function ViewItemScene(props) {
     const navigate = useNavigate()
-    const sendAlert = useContext(AlertContext)
+    const { sendCustomAlert } = useContext(AlertContext)
+    const [trigger, forceUpdate] = useForceUpdate()
 
     const { itemId } = useParams()
     const { useLogin } = props
-    const [{ username, userId }] = useLogin
+    const [loginUser] = useLogin //TODO cleanup
+    const userId = loginUser.userId || null
 
     //get Item and Info //
     const [item, setItem] = useState()
@@ -32,19 +37,14 @@ export default function ViewItemScene(props) {
             .catch(() => {
                 console.log("ERROR ITEM NOT FOUND!")
             })
-    }, [itemId])
-
-    // const offer = {
-    //     item.offer ?//TODO
-
-    // }
+    }, [itemId, trigger])
 
     function deleteItem() {
         deleteItemById(itemId)
             .then((res) => {
                 console.log("Item deleted!", res)
                 //FUCKING BOSS MOVE// send Alert with context to MainPage to persist on transition
-                sendAlert((handleClose) => (
+                sendCustomAlert((handleClose) => (
                     <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
                         Item deleted successfully!
                     </Alert>
@@ -73,8 +73,67 @@ export default function ViewItemScene(props) {
                     </button>
                 </div>
             ) : null}
+
+            <BetArea item={item} forceUpdate={forceUpdate} />
         </div>
     ) : (
         <div>please wait...</div>
     )
 }
+
+function BetArea({ item, forceUpdate }) {
+    const { sendAlert } = useContext(AlertContext)
+    const offer = item.offer //TODO if empty^?
+    const lastBidFromList = offer.bidList[offer.bidList.length - 1] ? offer.bidList[offer.bidList.length - 1].bid : false
+    const lastBid = lastBidFromList || offer.askPrice || 0
+
+    const [bid, setBid] = useState(lastBid)
+
+    function newBid() {
+        postNewBid(item._id, bid)
+            .then((res) => {
+                console.log("RESULT", res)
+                sendAlert("Gebot gesendet!", "success")
+                forceUpdate()
+            })
+            .catch((e) => {
+                console.log("ERROR", e.error)
+                sendAlert(e.error, "error")
+            })
+    }
+
+    return (
+        <div>
+            <p>BetArea</p>
+            <span>Aktueller Preis:</span>
+            <span>{lastBid}</span>
+            <TextField
+                id="outlined-adornment-amount"
+                label="Gebot"
+                value={bid}
+                onChange={(e) => setBid(e.target.value)}
+                InputProps={{
+                    endAdornment: <InputAdornment position="start">€</InputAdornment>,
+                    className: styles.InputAskPrice,
+                }}
+            />
+            <button className="DefaultButton" onClick={newBid}>
+                Gebot senden
+            </button>
+        </div>
+    )
+}
+
+// _id: "6230f2e1a752fd1c85a360f5"
+// ​
+// askPrice: 2
+// ​
+// bidList: Array []
+// ​
+// createdAt: "2022-03-15T20:23:57.765Z"
+// ​
+// endDate: "2022-03-16T20:10:47.000Z"
+// ​
+// startDate: "2022-03-15T20:10:47.524Z"
+// ​
+// updatedAt: "2022-03-15T20:23:57.765Z"
