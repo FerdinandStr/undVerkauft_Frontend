@@ -13,8 +13,6 @@ import MainSearchContainer from "./Scenes/SearchItem"
 import ItemOverview from "./Scenes/SearchItem/ItemSearchScene"
 import ViewItemScene from "./Scenes/ViewItem/ViewItemScene"
 
-export const AlertContext = React.createContext()
-
 function MainPage(props) {
     const { useLogin } = props
 

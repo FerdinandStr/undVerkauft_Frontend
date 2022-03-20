@@ -1,31 +1,23 @@
+import React from "react"
 import styles from "./NewItemScene.module.css"
 import { DateTimePicker } from "@mui/lab"
-import { Alert, Button, InputAdornment, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
+import { InputAdornment, TextField } from "@mui/material"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { postItemImg } from "../../api/fileRoutes"
 import { getItemById, postItem, updateItem } from "../../api/itemRoutes"
 import { useParams } from "react-router-dom"
-
-function showErrorMessage(e) {
-    console.log("ERROR", e)
-    if (e.messages) {
-        return e.messages[0]
-    } else if (e.error) {
-        return e.error
-    } else {
-        console.log(e)
-    }
-}
+import { AlertContext } from "../../helpers/AlertContext"
 
 export default function NewItemScene() {
+    const { catchAlert } = useContext(AlertContext)
     const { itemId } = useParams()
     const updateMode = !!itemId
     const navigate = useNavigate()
     const [files, setFiles] = useState([])
-    const [errorMsg, setErrorMsg] = useState() //TODO?
+    const [errorFields, setErrorFields] = useState()
 
-    const initialItem = {
+    const [item, setItem] = useState({
         name: "",
         description: "",
         picList: [],
@@ -35,8 +27,8 @@ export default function NewItemScene() {
             startDate: new Date(),
             endDate: new Date(),
         },
-    }
-    const [item, setItem] = useState(initialItem)
+    })
+
     function handleItemChange(obj) {
         setItem((prevItem) => ({ ...prevItem, ...obj }))
     }
@@ -48,22 +40,25 @@ export default function NewItemScene() {
                     console.log(item)
                     setItem(item)
                 })
-                .catch((e) => {
-                    console.log("Failed loading Item to Update!", e)
-                    setErrorMsg("Failed loading Item to Update!")
-                })
+                .catch(catchAlert)
         }
     }, [itemId])
 
     async function save() {
         try {
-            const dbItem = await postItem(item)
+            const startDate = item.offer.startDate || new Date()
+            const endDate = item.offer.endDate || new Date(startDate.getTime() + 900000) //15 min default
+
+            console.log(startDate, endDate)
+
+            const dbItem = await postItem({ ...item, offer: { ...item, startDate, endDate } })
             if (files.length > 0) {
                 await postItemImg(dbItem._id, files)
             }
             navigate("/items/" + dbItem._id)
         } catch (e) {
-            showErrorMessage(e)
+            catchAlert(e)
+            setErrorFields(e.fields || null)
         }
     }
 
@@ -75,7 +70,8 @@ export default function NewItemScene() {
             }
             navigate("/items/" + itemId)
         } catch (e) {
-            showErrorMessage(e)
+            catchAlert(e)
+            setErrorFields(e.fields || null)
         }
     }
 
@@ -83,14 +79,16 @@ export default function NewItemScene() {
         <div>
             <h1>Create new Item</h1>
             <TextField
-                id="outlined-basic"
+                error={errorFields ? errorFields.includes("name") : false}
+                id="name"
                 label="Artikelname"
                 variant="outlined"
                 value={item.name}
                 onChange={(e) => handleItemChange({ name: e.target.value })}
             />
             <TextField
-                id="outlined-basic"
+                error={errorFields ? errorFields.includes("description") : false}
+                id="description"
                 label="Beschreibung"
                 multiline
                 variant="outlined"
@@ -99,7 +97,8 @@ export default function NewItemScene() {
             />
             <h2>Angebot</h2>
             <TextField
-                id="outlined-adornment-amount"
+                error={errorFields ? errorFields.includes("askPrice") : false}
+                id="askPrice"
                 label="Startpreis"
                 value={item.offer.askPrice}
                 onChange={(e) => handleItemChange({ offer: { ...item.offer, askPrice: e.target.value } })}
@@ -113,19 +112,18 @@ export default function NewItemScene() {
                 label="Start Datum"
                 value={item.offer.startDate}
                 onChange={(date) => handleItemChange({ offer: { ...item.offer, startDate: date } })}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} error={errorFields ? errorFields.includes("startDate") : false} />}
             />
             <DateTimePicker
+                error={errorFields ? errorFields.includes("endDate") : false}
                 type="date"
                 label="End Datum"
                 value={item.offer.endDate}
                 onChange={(date) => handleItemChange({ offer: { ...item.offer, endDate: date } })}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) => <TextField {...params} error={errorFields ? errorFields.includes("endDate") : false} />}
             />
 
             <input type="file" name="Bild hochladen" multiple onChange={(e) => setFiles(e.target.files)} />
-
-            {errorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
 
             {updateMode ? (
                 <button className={styles.CreateItemButton + " DefaultButton"} onClick={update}>

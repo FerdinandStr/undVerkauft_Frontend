@@ -82,7 +82,7 @@ export default function ViewItemScene(props) {
 }
 
 function BetArea({ item, forceUpdate }) {
-    const { sendAlert } = useContext(AlertContext)
+    const { sendAlert, catchAlert } = useContext(AlertContext)
     const offer = item.offer //TODO if empty^?
     const lastBidFromList = offer.bidList[offer.bidList.length - 1] ? offer.bidList[offer.bidList.length - 1].bid : false
     const lastBid = lastBidFromList || offer.askPrice || 0
@@ -96,10 +96,7 @@ function BetArea({ item, forceUpdate }) {
                 sendAlert("Gebot gesendet!", "success")
                 forceUpdate()
             })
-            .catch((e) => {
-                console.log("ERROR", e.error)
-                sendAlert(e.error, "error")
-            })
+            .catch(catchAlert)
     }
 
     return (

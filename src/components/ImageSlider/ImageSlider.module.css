@@ -1,29 +1,29 @@
 .ImageSliderContainer {
-    display: flex;
-    /* display: inline-flex; */
-    /* justify-content: center; */
-    align-items: center;
     height: 300px;
+    width: 300px;
     position: relative;
 }
-.LeftButton {
+.ImageSliderContainer .LeftButton {
     position: absolute;
-    left: 10px;
-    margin: 10px;
-    background-color: rgba(0, 0, 0, 0.05) !important;
-    box-shadow: none !important;
+    display: inline-block;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: none;
+    height: 300px;
 }
 
-.RightButton {
+.ImageSliderContainer .RightButton {
     position: absolute;
-    right: 10px;
-    margin: 10px;
-    background-color: rgba(0, 0, 0, 0.05) !important;
-    box-shadow: none !important;
+    right: 0px;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: none;
+    height: 300px;
 }
-.RightButton:hover,
-.LeftButton:hover {
-    background-color: rgba(0, 0, 0, 0.5) !important;
+.ImageSliderContainer .RightButton:hover,
+.ImageSliderContainer .LeftButton:hover {
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .Image {

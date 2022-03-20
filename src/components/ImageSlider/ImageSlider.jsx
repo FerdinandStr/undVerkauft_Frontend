@@ -1,8 +1,9 @@
-import { useState } from "react"
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
 import styles from "./ImageSlider.module.css"
 
 export default function ImageSlider(props) {
-    const { imgUrlArray } = props
+    const { imgUrlArray, itemId } = props
     const [activeImg, setActiveImg] = useState(0)
 
     function changeImgLeft() {
@@ -14,11 +15,17 @@ export default function ImageSlider(props) {
 
     return imgUrlArray ? (
         <div className={styles.ImageSliderContainer}>
-            <button className={styles.LeftButton + " DefaultButton"} onClick={changeImgLeft}>
+            <button className={"DefaultButton " + styles.LeftButton} onClick={changeImgLeft}>
                 {"<<"}
             </button>
-            <img className={styles.Image} src={imgUrlArray[activeImg]}></img>
-            <button className={styles.RightButton + " DefaultButton"} onClick={changeImgRight}>
+            {itemId ? (
+                <Link to={"/items/" + itemId}>
+                    <img className={styles.Image} src={imgUrlArray[activeImg]} />
+                </Link>
+            ) : (
+                <img className={styles.Image} src={imgUrlArray[activeImg]} />
+            )}
+            <button className={"DefaultButton " + styles.RightButton} onClick={changeImgRight}>
                 {">>"}
             </button>
         </div>

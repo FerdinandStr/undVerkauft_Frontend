@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import ImageSlider from "../../../components/ImageSlider/ImageSlider"
 import { BASE_URL } from "../../../helpers/rest"
@@ -47,7 +47,7 @@ export default function ItemCard({ item }) {
 
     return (
         <div className={styles.ItemCard}>
-            <ImageSlider imgUrlArray={imageUrlArray} />
+            <ImageSlider imgUrlArray={imageUrlArray} itemId={item._id} />
             <div>
                 <Link to={"/items/" + item._id}>
                     <p className={styles.ItemName}>{item.name}</p>
