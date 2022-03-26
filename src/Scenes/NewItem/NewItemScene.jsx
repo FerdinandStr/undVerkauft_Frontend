@@ -46,12 +46,11 @@ export default function NewItemScene() {
 
     async function save() {
         try {
+            //15 min default
             const startDate = item.offer.startDate || new Date()
-            const endDate = item.offer.endDate || new Date(startDate.getTime() + 900000) //15 min default
+            const endDate = item.offer.endDate || new Date(startDate.getTime() + 900000)
 
-            console.log(startDate, endDate)
-
-            const dbItem = await postItem({ ...item, offer: { ...item, startDate, endDate } })
+            const dbItem = await postItem({ ...item, offer: { ...item.offer, startDate, endDate } })
             if (files.length > 0) {
                 await postItemImg(dbItem._id, files)
             }
@@ -101,7 +100,11 @@ export default function NewItemScene() {
                 id="askPrice"
                 label="Startpreis"
                 value={item.offer.askPrice}
-                onChange={(e) => handleItemChange({ offer: { ...item.offer, askPrice: e.target.value } })}
+                onChange={(e) => {
+                    if (/^\d{1,12}$/.test(e.target.value)) {
+                        handleItemChange({ offer: { ...item.offer, askPrice: parseInt(e.target.value) } })
+                    }
+                }}
                 InputProps={{
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                     className: styles.InputAskPrice,

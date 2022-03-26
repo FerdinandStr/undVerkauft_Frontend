@@ -5,7 +5,7 @@ import styles from "./ItemSearchScene.module.css"
 
 export default function ItemSearchScene(params) {
     //INFO: search field in Header and data in MainPage
-    const { searchInput, filterArray } = params
+    const { filterArray } = params
     const [items, setItems] = useState([])
 
     // console.log("Filter Array on Serach", filterArray)

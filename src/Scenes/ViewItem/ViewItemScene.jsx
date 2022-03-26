@@ -1,4 +1,4 @@
-import { Alert, Button, Input, InputAdornment, TextField } from "@mui/material"
+import { Alert, Input, InputAdornment, TextField } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router"
 import { Link } from "react-router-dom"
@@ -29,7 +29,6 @@ export default function ViewItemScene(props) {
     useEffect(() => {
         getItemById(itemId)
             .then((item) => {
-                console.log("ITEM", item)
                 setItem(item)
                 setImageUrlArray(item.picList.map((pic) => BASE_URL + "/files/itemImg/" + pic.filename))
                 // item.picList = item.picList.map((pic) => ({ ...pic, url: BASE_URL + "/files/itemImg/" + pic.filename }))
@@ -92,7 +91,7 @@ function BetArea({ item, forceUpdate }) {
     function newBid() {
         postNewBid(item._id, bid)
             .then((res) => {
-                console.log("RESULT", res)
+                console.log("Send Bid", res)
                 sendAlert("Gebot gesendet!", "success")
                 forceUpdate()
             })
@@ -107,8 +106,9 @@ function BetArea({ item, forceUpdate }) {
             <TextField
                 id="outlined-adornment-amount"
                 label="Gebot"
+                type="number"
                 value={bid}
-                onChange={(e) => setBid(e.target.value)}
+                onChange={(e) => (/^\d{1,12}$/.test(e.target.value) ? setBid(parseInt(e.target.value)) : null)}
                 InputProps={{
                     endAdornment: <InputAdornment position="start">€</InputAdornment>,
                     className: styles.InputAskPrice,
@@ -120,17 +120,3 @@ function BetArea({ item, forceUpdate }) {
         </div>
     )
 }
-
-// _id: "6230f2e1a752fd1c85a360f5"
-// ​
-// askPrice: 2
-// ​
-// bidList: Array []
-// ​
-// createdAt: "2022-03-15T20:23:57.765Z"
-// ​
-// endDate: "2022-03-16T20:10:47.000Z"
-// ​
-// startDate: "2022-03-15T20:10:47.524Z"
-// ​
-// updatedAt: "2022-03-15T20:23:57.765Z"

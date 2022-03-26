@@ -23,7 +23,9 @@ export default function ImageSlider(props) {
                     <img className={styles.Image} src={imgUrlArray[activeImg]} />
                 </Link>
             ) : (
-                <img className={styles.Image} src={imgUrlArray[activeImg]} />
+                <Link to={"/items/" + itemId}>
+                    <img className={styles.Image} src={imgUrlArray[activeImg]} />
+                </Link>
             )}
             <button className={"DefaultButton " + styles.RightButton} onClick={changeImgRight}>
                 {">>"}

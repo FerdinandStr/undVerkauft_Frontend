@@ -2,11 +2,11 @@ import { Button, TextField } from "@mui/material"
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { userLogout } from "../../api/authRoutes"
-import styles from "./style.module.css"
+import styles from "./Header.module.css"
 import { useNavigate } from "react-router"
 
 function Header(props) {
-    const { useLogin, setSearchInput, setSideMenuOpen, addSearchFilter } = props
+    const { useLogin, setSideMenuOpen, filterState } = props
     const navigate = useNavigate()
 
     const [loginUser, checkLogin] = useLogin
@@ -20,20 +20,19 @@ function Header(props) {
 
     const [search, setSearch] = useState("")
     function updateSearch() {
-        addSearchFilter(search)
-        setSearchInput(search)
+        filterState.addSearchFilter(search.toLocaleLowerCase())
     }
 
     return (
         <div className={styles.HeaderDiv}>
-            <Button onClick={() => setSideMenuOpen(true)}>{"left"}</Button>
+            <Button onClick={() => setSideMenuOpen(true)}>{"Menü"}</Button>
             <Link to="/items">
-                <div>Logo</div>
+                <img className={styles.Logo} src="./und_verkauft_logo.svg" />
             </Link>
             <div>
                 <TextField
                     id="outlined-basic"
-                    label="Outlined"
+                    label="Suche"
                     variant="outlined"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -43,13 +42,15 @@ function Header(props) {
                         }
                     }}
                 />
-                <button onClick={updateSearch}>Search</button>
+                <button className={"DefaultButton"} onClick={updateSearch}>
+                    Suchen
+                </button>
             </div>
             {loginUser ? (
-                <div>
+                <>
                     <p>{loginUser.username}</p>
                     <Button onClick={logout}>Logout</Button>
-                </div>
+                </>
             ) : (
                 <Link to="/login">
                     <div>Login</div>

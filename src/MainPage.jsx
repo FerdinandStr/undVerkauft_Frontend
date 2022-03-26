@@ -16,9 +16,8 @@ import ViewItemScene from "./Scenes/ViewItem/ViewItemScene"
 function MainPage(props) {
     const { useLogin } = props
 
-    //SearchInputState FilterState for Header Searchbar and MainSearchContainer//
-    const [searchInput, setSearchInput] = useState()
-    const { filterState, addSearchFilter } = useFilterState()
+    //FilterState for Header Searchbar and MainSearchContainer//
+    const filterState = useFilterState()
 
     //SideMenu State//
     const sideMenuState = useSideMenuState()
@@ -27,19 +26,20 @@ function MainPage(props) {
     //Snackbar State => Context is used to send Alerts from Child components via sendAlert() back to MainPage (persitent even after route change)//
 
     return (
-        <div>
-            <Header useLogin={useLogin} setSearchInput={setSearchInput} setSideMenuOpen={setSideMenuOpen} addSearchFilter={addSearchFilter} />
-            <SideMenu state={sideMenuState} />
+        <div className={"Background"}>
+            <Header useLogin={useLogin} setSideMenuOpen={setSideMenuOpen} filterState={filterState} />
+            <div className="defaultPageContainer">
+                <SideMenu state={sideMenuState} />
 
-            <AlertContextProvider>
-                <Routes>
-                    <Route path="/items" element={<MainSearchContainer searchInput={searchInput} filterState={filterState} />} />
-                    <Route path="/items/new" element={<NewItemScene />} />
-                    <Route path="/items/update/:itemId" element={<NewItemScene />} />
-                    <Route path="/items/:itemId" element={<ViewItemScene useLogin={useLogin} />} />
-                </Routes>
-            </AlertContextProvider>
-
+                <AlertContextProvider>
+                    <Routes>
+                        <Route path="/items" element={<MainSearchContainer filterState={filterState} />} />
+                        <Route path="/items/new" element={<NewItemScene />} />
+                        <Route path="/items/update/:itemId" element={<NewItemScene />} />
+                        <Route path="/items/:itemId" element={<ViewItemScene useLogin={useLogin} />} />
+                    </Routes>
+                </AlertContextProvider>
+            </div>
             <Footer />
         </div>
     )
