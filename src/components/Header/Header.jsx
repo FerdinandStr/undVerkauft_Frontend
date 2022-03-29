@@ -27,7 +27,7 @@ function Header(props) {
         <div className={styles.HeaderDiv}>
             <Button onClick={() => setSideMenuOpen(true)}>{"Menü"}</Button>
             <Link to="/items">
-                <img className={styles.Logo} src="./und_verkauft_logo.svg" />
+                <img className={styles.Logo} src="/und_verkauft_logo.svg" />
             </Link>
             <div>
                 <TextField

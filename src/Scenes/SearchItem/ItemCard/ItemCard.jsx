@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import ImageSlider from "../../../components/ImageSlider/ImageSlider"
+import RemainingTime from "../../../components/RemainingTime/RemainingTime"
 import { BASE_URL } from "../../../helpers/rest"
 import styles from "./ItemCard.module.css"
-import RemainingTime from "./RemainingTime"
 
 function useForceUpdate() {
     const [trigger, setValue] = useState(0)
@@ -16,24 +16,27 @@ function useForceUpdate() {
 export default function ItemCard({ item }) {
     const [trigger, forceUpdate] = useForceUpdate()
     let lastPrice
+    let lastBidUser
 
     if (item.offer) {
-        const lastBid = item.offer ? item.offer.bidList[item.offer.bidList.length - 1] : null
+        const bidList = item.offer.bidList || null
+        const lastBid = bidList && bidList[bidList.length - 1] ? bidList[bidList.length - 1] : null
         lastPrice = lastBid ? lastBid.bid : null || item.offer.askPrice
+        lastBidUser = lastBid ? lastBid.userId.username : false
 
         //update running auctions every second or minute//
         useEffect(() => {
-            const remainingUnixTime = Math.abs(Date.now() - new Date(item.offer.endDate))
+            const remainingMsec = Math.abs(Date.now() - new Date(item.offer.endDate))
             let timer
-            if (!(remainingUnixTime < 0)) {
-                if (!(remainingUnixTime > -1000 * 60 * 60)) {
+            if (!(remainingMsec < 0)) {
+                if (!(remainingMsec > 1000 * 60 * 60)) {
                     timer = setInterval(() => {
                         forceUpdate()
                     }, 1000)
                 } else {
                     timer = setInterval(() => {
                         forceUpdate()
-                    }, 1000)
+                    }, 10000)
                 }
             }
             return () => clearInterval(timer)
@@ -55,8 +58,11 @@ export default function ItemCard({ item }) {
                 <p className={styles.ItemDesc}>{item.description}</p>
                 {item.offer ? (
                     <>
-                        <p className={styles.ItemPrice}>{lastPrice} €</p>
-                        <RemainingTime endDate={item.offer.endDate} />{" "}
+                        <p>
+                            <span className={styles.ItemPrice}>{lastPrice} € </span>
+                            geboten von <span className={styles.ItemPrice}>{lastBidUser}</span>
+                        </p>
+                        <RemainingTime startDate={item.offer.startDate} endDate={item.offer.endDate} />{" "}
                     </>
                 ) : null}
             </div>

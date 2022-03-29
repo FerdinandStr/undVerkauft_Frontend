@@ -23,7 +23,7 @@ export function AlertContextProvider({ children }) {
     }
 
     function sendAlert(message, severity) {
-        const alertType = severity || "error"
+        const alertType = severity || "error" // warning, info, success
 
         const alert = (
             <Alert onClose={handleSnackbarClose} severity={alertType} sx={{ width: "100%" }}>
@@ -34,8 +34,12 @@ export function AlertContextProvider({ children }) {
     }
 
     function catchAlert(event) {
-        const message = event.error || event.message || event
+        let message = event.error || event.message || event
         console.log("catch alert:", event)
+
+        if (event.messages && event.messages.length > 0) {
+            message = event.messages.reduce((acc, messages) => acc + "; " + messages)
+        }
 
         const alert = (
             <Alert onClose={handleSnackbarClose} severity={"error"} sx={{ width: "100%" }}>

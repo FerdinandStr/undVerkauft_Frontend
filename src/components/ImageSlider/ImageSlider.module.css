@@ -2,6 +2,8 @@
     height: 300px;
     width: 300px;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 .ImageSliderContainer .LeftButton {
     position: absolute;

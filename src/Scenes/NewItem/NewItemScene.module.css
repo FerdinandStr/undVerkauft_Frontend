@@ -3,5 +3,12 @@
     margin-right: 5px;
 }
 
-.CreateItemButton {
+.NewItemContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NewItemContainer > * {
+    margin: 10px;
 }

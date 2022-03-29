@@ -1,11 +1,12 @@
-import { Alert, Snackbar } from "@mui/material"
-import React, { useState } from "react"
-import { Navigate, Route, Routes, useNavigate } from "react-router"
+import React from "react"
+import { Route, Routes } from "react-router"
+import { Link } from "react-router-dom"
 import { useFilterState } from "./components/FilterMenuBar"
 import Footer from "./components/Footer"
 import Header from "./components/Header/Header"
 import { SideMenu, useSideMenuState } from "./components/SideMenu/SideMenu"
 import { AlertContextProvider } from "./helpers/AlertContext"
+import History from "./Scenes/History"
 import NewItemScene from "./Scenes/NewItem/NewItemScene"
 import MainSearchContainer from "./Scenes/SearchItem"
 // import useLoginStatus from "./hooks/useLoginStatus"
@@ -33,10 +34,23 @@ function MainPage(props) {
 
                 <AlertContextProvider>
                     <Routes>
+                        <Route index element={<MainSearchContainer filterState={filterState} />} />
                         <Route path="/items" element={<MainSearchContainer filterState={filterState} />} />
+                        <Route path="/items/history" element={<History useLogin={useLogin} />} />
                         <Route path="/items/new" element={<NewItemScene />} />
                         <Route path="/items/update/:itemId" element={<NewItemScene />} />
                         <Route path="/items/:itemId" element={<ViewItemScene useLogin={useLogin} />} />
+
+                        <Route
+                            path="*"
+                            element={
+                                <Link to="/">
+                                    <div className="flexBoxCenterColumn">
+                                        <img src="/404Image.png" className="Error404Image" />
+                                    </div>
+                                </Link>
+                            }
+                        />
                     </Routes>
                 </AlertContextProvider>
             </div>

@@ -13,13 +13,10 @@ export default function ItemSearchScene(params) {
         return { ...acc, [current.param]: [...(acc[current.param] || []), current.value] }
     }, {})
 
-    console.log("Result", queryParams)
-
     useEffect(() => {
         getItemsByQuery(queryParams)
             // getItems({ name: searchInput, activeOffer: true })
             .then((data) => {
-                console.log("Item SearchResult", data)
                 setItems(data)
             })
             .catch((err) => {

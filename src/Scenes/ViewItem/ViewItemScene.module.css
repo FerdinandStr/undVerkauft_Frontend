@@ -5,3 +5,22 @@ button.DeleteButton {
 button.DeleteButton:hover {
     background-color: rgb(160, 0, 0);
 }
+
+.ViewItemContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ViewItemContainer > * {
+    margin: 10px 0;
+}
+
+.BetContainer > * {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.ItemPrice {
+    color: mediumseagreen;
+}

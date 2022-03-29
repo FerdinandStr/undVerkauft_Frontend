@@ -1,5 +1,5 @@
 import { Alert, Button, FormControlLabel, FormGroup, Switch, TextField } from "@mui/material"
-import { useState } from "react"
+import React, { useState } from "react"
 import { useNavigate } from "react-router"
 import { userLogin, userRegister } from "../../api/authRoutes"
 import styles from "./LoginScene.module.css"

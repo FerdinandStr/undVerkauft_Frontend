@@ -1,7 +1,7 @@
 import { Chip, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
-import { React, useState } from "react"
+import React, { useState } from "react"
 import styles from "./index.module.css"
-import { DatePicker } from "@mui/lab"
+import { DatePicker, DateTimePicker } from "@mui/lab"
 import { style } from "@mui/system"
 
 const defaultFilters2 = [
@@ -51,53 +51,60 @@ function FilterMenuBar({ filterState }) {
     return (
         <div className={styles.FilterMenuBar}>
             <div className={styles.FilterSelection}>
-                <FormControl fullWidth sx={{ flexDirection: "row" }}>
-                    <InputLabel id="createdAt_sort">Erstelldatum</InputLabel>
-                    <Select
-                        className={styles.Select}
-                        labelId="createdAt_sort"
-                        label="Erstelldatum"
-                        id="createdAt_sort"
-                        // variant="outlined"
-                        value=""
-                        onChange={(e) => {
-                            addSortFilter(e.target.value.param, "createdAt", e.target.value.label)
-                        }}
-                    >
-                        <MenuItem value={{ param: "asc", label: "Erstelldatum aufsteigend" }}>aufsteigend</MenuItem>
-                        <MenuItem value={{ param: "desc", label: "Erstelldatum absteigend" }}>absteigend</MenuItem>
-                    </Select>
+                <div>
+                    <FormControl fullWidth sx={{ flexDirection: "row" }}>
+                        <InputLabel id="createdAt_sort">Erstelldatum</InputLabel>
+                        <Select
+                            className={styles.Select}
+                            labelId="createdAt_sort"
+                            label="Erstelldatum"
+                            id="createdAt_sort"
+                            value=""
+                            onChange={(e) => {
+                                addSortFilter(e.target.value.param, "createdAt", e.target.value.label)
+                            }}
+                        >
+                            <MenuItem value={{ param: "asc", label: "Erstelldatum aufsteigend" }}>aufsteigend</MenuItem>
+                            <MenuItem value={{ param: "desc", label: "Erstelldatum absteigend" }}>absteigend</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
 
-                    {/* <InputLabel id="createdAt_sort">Gebot aktiv</InputLabel>
-                <Select
-                    labelId="createdAt_sort"
-                    id="createdAt_sort"
-                    value=""
-                    onChange={(e) => {
-                        addCustomFilter("offerActive", e.target.value.value, e.target.value.label)
-                    }}
-                >
-                    <MenuItem value={{ value: encodeURIComponent({ $gte: new Date() }), label: "Alle Angebote" }}>Alle Angebote</MenuItem>
-                    <MenuItem value={{ value: encodeURIComponent(JSON.stringify({ $gte: new Date() })), label: "Nur aktive Angebote" }}>
-                        Nur aktive Angebote
-                    </MenuItem>
-                </Select> */}
+                <div>
+                    <FormControl fullWidth sx={{ flexDirection: "row" }}>
+                        <InputLabel id="Angebotsende_sort">Angebotsende</InputLabel>
+                        <Select
+                            className={styles.Select}
+                            labelId="Angebotsende_sort"
+                            label="Angebotsende"
+                            id="Angebotsende_sort"
+                            value=""
+                            onChange={(e) => {
+                                addSortFilter(e.target.value.param, "offer.endDate", e.target.value.label)
+                            }}
+                        >
+                            <MenuItem value={{ param: "asc", label: "Erstelldatum aufsteigend" }}>aufsteigend</MenuItem>
+                            <MenuItem value={{ param: "desc", label: "Erstelldatum absteigend" }}>absteigend</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
 
-                    <DatePicker
-                        // type="date"
+                <div>
+                    <DateTimePicker
                         label="Angebotsende nach dem ..."
+                        inputFormat="dd.MM.yyyy"
                         value={dateState}
                         onChange={(date) => {
                             setDateState(date)
                             addCustomFilter(
                                 "offerActive",
                                 encodeURIComponent(JSON.stringify({ $gte: date })),
-                                "Angebotsende nach dem " + date.toLocaleDateString()
+                                "Angebotsende nach dem " + date.toLocaleString()
                             )
                         }}
                         renderInput={(params) => <TextField {...params} />}
                     />
-                </FormControl>
+                </div>
             </div>
             <div className={styles.ChipContainer}>
                 {filterArray.map((filter, i) => (

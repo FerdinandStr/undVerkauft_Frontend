@@ -1,0 +1,12 @@
+.PassedTime {
+    color: grey;
+}
+.RemainingTime {
+    color: goldenrod;
+}
+.RedTime {
+    color: red;
+}
+.NotStartedTime {
+    color: #1057a8;
+}

@@ -14,10 +14,9 @@ function SideMenu(props) {
     const [isSideMenuOpen, setSideMenuOpen] = props.state
 
     const menuList = [
-        { text: "Artikel verkaufen", link: "/items/new", icon: <FcSalesPerformance className={styles.NavButton} /> },
         { text: "Laufende Auktionen", link: "/items", icon: <FcShop className={styles.NavButton} /> },
-        { text: "Historie", link: "", icon: <FcAlarmClock className={styles.NavButton} /> },
-        { text: "Profil", link: "", icon: <FcPortraitMode className={styles.NavButton} /> },
+        { text: "Artikel verkaufen", link: "/items/new", icon: <FcSalesPerformance className={styles.NavButton} /> },
+        { text: "Historie", link: "/items/history", icon: <FcAlarmClock className={styles.NavButton} /> },
     ]
 
     const list = () => (
@@ -30,15 +29,6 @@ function SideMenu(props) {
                             <ListItemText primary={entry.text} />
                         </ListItem>
                     </Link>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {["All mail", "Trash", "Spam"].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <MdInbox /> : <MdMail />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
                 ))}
             </List>
         </Box>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { deleteItemById, getItemById } from "../../api/itemRoutes"
 import { postNewBid } from "../../api/offerRoutes"
 import ImageSlider from "../../components/ImageSlider/ImageSlider"
+import RemainingTime from "../../components/RemainingTime/RemainingTime"
 import { AlertContext } from "../../helpers/AlertContext"
 import { BASE_URL } from "../../helpers/rest"
 import useForceUpdate from "../../hooks/useForceUpdate"
@@ -56,7 +57,7 @@ export default function ViewItemScene(props) {
     }
 
     return item ? (
-        <div>
+        <div className={styles.ViewItemContainer}>
             <h1>{item.name}</h1>
             <p>{item.description}</p>
 
@@ -65,10 +66,10 @@ export default function ViewItemScene(props) {
             {isUserItemCreator ? (
                 <div>
                     <Link to={"/items/update/" + itemId}>
-                        <button className={" DefaultButton"}>Modify</button>
+                        <button className={" DefaultButton"}>Bearbeiten</button>
                     </Link>
                     <button className={styles.DeleteButton + " DefaultButton"} onClick={deleteItem}>
-                        Delete
+                        Löschen
                     </button>
                 </div>
             ) : null}
@@ -83,8 +84,9 @@ export default function ViewItemScene(props) {
 function BetArea({ item, forceUpdate }) {
     const { sendAlert, catchAlert } = useContext(AlertContext)
     const offer = item.offer //TODO if empty^?
-    const lastBidFromList = offer.bidList[offer.bidList.length - 1] ? offer.bidList[offer.bidList.length - 1].bid : false
-    const lastBid = lastBidFromList || offer.askPrice || 0
+    const lastBidFromList = offer.bidList[offer.bidList.length - 1] ? offer.bidList[offer.bidList.length - 1] : null
+    const lastBid = lastBidFromList ? lastBidFromList.bid : false || offer.askPrice || 0
+    const lastBidUser = lastBidFromList ? lastBidFromList.userId.username : null
 
     const [bid, setBid] = useState(lastBid)
 
@@ -98,11 +100,50 @@ function BetArea({ item, forceUpdate }) {
             .catch(catchAlert)
     }
 
+    useEffect(() => {
+        const remainingMsec = Math.abs(Date.now() - new Date(offer.endDate))
+        let timer
+        if (!(remainingMsec < 0)) {
+            if (!(remainingMsec > 1000 * 60 * 60)) {
+                timer = setInterval(() => {
+                    forceUpdate()
+                }, 1000)
+            } else {
+                timer = setInterval(() => {
+                    forceUpdate()
+                }, 10000)
+            }
+        }
+        return () => clearInterval(timer)
+    }, [])
+
+    //Check if auction is over
+    if (offer.startDate && new Date(offer.endDate) < new Date()) {
+        return lastBidUser ? (
+            <div className={styles.BetContainer}>
+                <h2>&#x1F4B0; Der Artikel wurde verkauft! &#x1F4B0;</h2>
+                <p>
+                    Preis: <span className={styles.ItemPrice}>{lastBid} €</span>
+                </p>
+                <p>Gewinner: {lastBidUser}</p>
+            </div>
+        ) : (
+            <div>Die Auktion ist beendet, leider hat niemand geboten. &#x1F625;</div>
+        )
+    }
+
     return (
-        <div>
-            <p>BetArea</p>
-            <span>Aktueller Preis:</span>
-            <span>{lastBid}</span>
+        <div className={styles.BetContainer}>
+            <RemainingTime startDate={offer.startDate} endDate={offer.endDate} />
+            <h2>&#x1F525; Der Preis ist heiß &#x1F525;</h2>
+            <p>
+                {/* <p>{lastBidUser}</p> */}
+                <span>Aktuelles Gebot:</span>
+                <span className={styles.ItemPrice}> {lastBid} €</span>
+                <p>
+                    Von: <span className={styles.ItemPrice}>{lastBidUser}</span>
+                </p>
+            </p>
             <TextField
                 id="outlined-adornment-amount"
                 label="Gebot"
@@ -115,7 +156,7 @@ function BetArea({ item, forceUpdate }) {
                 }}
             />
             <button className="DefaultButton" onClick={newBid}>
-                Gebot senden
+                bieten &#x1F4B8;
             </button>
         </div>
     )

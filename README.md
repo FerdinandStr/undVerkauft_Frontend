@@ -1,9 +1,6 @@
-#UNBEKANNTER FEHLER MIT NODE_ENV UMGEBUNGSVARIABLE GEFIXT DURCH INSTALLATION ALTER VERSIONEN (unbekannt welches Package)
-=> unbedingt auf fremdsystemen installation testen (R&R)
+![und verkauft! Logo](public/und_verkauft_logo.svg)
 
-# New Project
-
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+# und Verkauft! - DHBW Webanwendung Projekt
 
 ## Available Scripts
 
@@ -15,14 +12,7 @@ Open http://localhost:8080 to view it in the browser.
 The page will reload if you make edits.
 You will also see any lint errors in the console.
 
-### npm run build
+### npm run wp
 
-Builds a static copy of your site to the `build/` folder.
+Builds a static copy with **webpack** of your site to the `build/` folder.
 Your app is ready to be deployed!
-
-**For the best production performance:** Add a build bundler plugin like "@snowpack/plugin-webpack" to your `snowpack.config.mjs` config file.
-
-### npm test
-
-Launches the application test runner.
-Run with the `--watch` flag (`npm test -- --watch`) to run in interactive watch mode.
