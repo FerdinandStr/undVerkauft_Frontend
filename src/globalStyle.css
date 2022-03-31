@@ -69,6 +69,7 @@ a:hover {
 .Background {
     background: linear-gradient(90deg, rgba(245, 222, 142, 1) 0%, rgba(179, 229, 159, 1) 71%, rgba(120, 194, 164, 1) 100%);
     padding: 15px;
+    min-height: 100vh;
 }
 
 .defaultPageContainer {

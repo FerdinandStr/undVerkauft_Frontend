@@ -60,7 +60,11 @@ export default function ItemCard({ item }) {
                     <>
                         <p>
                             <span className={styles.ItemPrice}>{lastPrice} € </span>
-                            geboten von <span className={styles.ItemPrice}>{lastBidUser}</span>
+                            {lastBidUser ? (
+                                <>
+                                    geboten von <span className={styles.ItemPrice}>{lastBidUser}</span>{" "}
+                                </>
+                            ) : null}
                         </p>
                         <RemainingTime startDate={item.offer.startDate} endDate={item.offer.endDate} />{" "}
                     </>

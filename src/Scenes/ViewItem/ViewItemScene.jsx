@@ -14,7 +14,7 @@ import styles from "./ViewItemScene.module.css"
 
 export default function ViewItemScene(props) {
     const navigate = useNavigate()
-    const { sendCustomAlert } = useContext(AlertContext)
+    const { sendCustomAlert, catchAlert } = useContext(AlertContext)
     const [trigger, forceUpdate] = useForceUpdate()
 
     const { itemId } = useParams()
@@ -34,9 +34,7 @@ export default function ViewItemScene(props) {
                 setImageUrlArray(item.picList.map((pic) => BASE_URL + "/files/itemImg/" + pic.filename))
                 // item.picList = item.picList.map((pic) => ({ ...pic, url: BASE_URL + "/files/itemImg/" + pic.filename }))
             })
-            .catch(() => {
-                console.log("ERROR ITEM NOT FOUND!")
-            })
+            .catch(catchAlert)
     }, [itemId, trigger])
 
     function deleteItem() {
@@ -51,9 +49,7 @@ export default function ViewItemScene(props) {
                 ))
                 navigate("/items")
             })
-            .catch((e) => {
-                console.log("ERROR DELETING ITEM", e)
-            })
+            .catch(catchAlert)
     }
 
     return item ? (

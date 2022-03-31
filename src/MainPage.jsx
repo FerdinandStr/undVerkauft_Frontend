@@ -2,7 +2,6 @@ import React from "react"
 import { Route, Routes } from "react-router"
 import { Link } from "react-router-dom"
 import { useFilterState } from "./components/FilterMenuBar"
-import Footer from "./components/Footer"
 import Header from "./components/Header/Header"
 import { SideMenu, useSideMenuState } from "./components/SideMenu/SideMenu"
 import { AlertContextProvider } from "./helpers/AlertContext"
@@ -11,7 +10,6 @@ import NewItemScene from "./Scenes/NewItem/NewItemScene"
 import MainSearchContainer from "./Scenes/SearchItem"
 // import useLoginStatus from "./hooks/useLoginStatus"
 // import LoginScene from "./Scenes/LoginScene"
-import ItemOverview from "./Scenes/SearchItem/ItemSearchScene"
 import ViewItemScene from "./Scenes/ViewItem/ViewItemScene"
 
 function MainPage(props) {
@@ -54,7 +52,6 @@ function MainPage(props) {
                     </Routes>
                 </AlertContextProvider>
             </div>
-            <Footer />
         </div>
     )
 }

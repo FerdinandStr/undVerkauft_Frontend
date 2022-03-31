@@ -83,8 +83,8 @@ function FilterMenuBar({ filterState }) {
                                 addSortFilter(e.target.value.param, "offer.endDate", e.target.value.label)
                             }}
                         >
-                            <MenuItem value={{ param: "asc", label: "Erstelldatum aufsteigend" }}>aufsteigend</MenuItem>
-                            <MenuItem value={{ param: "desc", label: "Erstelldatum absteigend" }}>absteigend</MenuItem>
+                            <MenuItem value={{ param: "asc", label: "Angebotsende aufsteigend" }}>aufsteigend</MenuItem>
+                            <MenuItem value={{ param: "desc", label: "Angebotsende absteigend" }}>absteigend</MenuItem>
                         </Select>
                     </FormControl>
                 </div>

@@ -4,7 +4,7 @@ import ItemSearchScene from "../SearchItem/ItemSearchScene"
 export default function History({ useLogin }) {
     const [user] = useLogin
     const userId = user ? user.userId : null
-    console.log("user", userId)
+
     const createdHistoryFilter = userId
         ? [
               { param: "creationUser", value: userId },

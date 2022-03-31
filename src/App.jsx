@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import "./App.css"
-import { Route, Routes, useNavigate } from "react-router"
+import { Route, Routes } from "react-router"
 import MainPage from "./MainPage"
 import useLoginStatus from "./hooks/useLoginStatus"
 import LoginScene from "./Scenes/Login/LoginScene"
@@ -11,7 +11,6 @@ function App() {
     const useLogin = useLoginStatus()
 
     return (
-        // <MainPage />
         <div stlye="width=100%">
             <LocalizationProvider dateAdapter={DateAdapter}>
                 <Routes>

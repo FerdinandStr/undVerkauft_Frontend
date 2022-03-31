@@ -28,6 +28,10 @@ Mittels **Docker** kann das docker-compose Script aufgerufen werden, welche den 
 
 > http-server ./public --proxy http://localhost:8080?
 
+<br/>
+
+Die Webseite sollte dann unter [http://localhost:8080](http://localhost:8080) zur verfügung stehen! (Wegen CORS bitte auch nur localhost verwenden und keine IP)
+
 <br/><br/>
 
 ## Webseite mit Webpack bauen (Fallback)

@@ -14,7 +14,7 @@ function SideMenu(props) {
     const [isSideMenuOpen, setSideMenuOpen] = props.state
 
     const menuList = [
-        { text: "Laufende Auktionen", link: "/items", icon: <FcShop className={styles.NavButton} /> },
+        { text: "Alle Artikel", link: "/items", icon: <FcShop className={styles.NavButton} /> },
         { text: "Artikel verkaufen", link: "/items/new", icon: <FcSalesPerformance className={styles.NavButton} /> },
         { text: "Historie", link: "/items/history", icon: <FcAlarmClock className={styles.NavButton} /> },
     ]

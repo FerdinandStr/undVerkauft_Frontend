@@ -42,9 +42,11 @@ function Header(props) {
                         }
                     }}
                 />
-                <button className={"DefaultButton"} onClick={updateSearch}>
-                    Suchen
-                </button>
+                <Link to="/items">
+                    <button className={"DefaultButton"} onClick={updateSearch}>
+                        Suchen
+                    </button>
+                </Link>
             </div>
             {loginUser ? (
                 <>
